@@ -1,22 +1,35 @@
 #!/bin/bash
 
-# Check if .env file exists
+# Exit immediately on error
+set -e
+
+echo "🔍 Checking .env file..."
 if [ ! -f .env ]; then
-    echo "Creating .env file from .env.example..."
+    echo "⚠️  Creating .env from .env.example"
     cp .env.example .env
-    echo "Please edit .env file and set your environment variables"
+    echo "➡️  Please edit the .env file with your environment variables before continuing."
     exit 1
 fi
 
-# Check if Docker is running
+echo "🔄 Checking if Docker is running..."
 if ! docker info > /dev/null 2>&1; then
-    echo "Docker is not running. Please start Docker and try again."
+    echo "❌ Docker is not running. Please start Docker and try again."
     exit 1
 fi
 
-# Ensure init script is executable
-chmod +x 1-init-admin.sh
+# Make init scripts executable if needed
+echo "🔧 Ensuring init scripts are executable..."
+chmod +x 1-init-admin.sh || true
+chmod +x 3-restore-dump.sh || true
 
-# Build and start the containers in detached mode
-echo "Building and starting containers in detached mode..."
+# Optional: Reset everything (including database volumes)
+echo "🧹 Cleaning up old containers and volumes..."
+docker compose down -v
+
+# Start everything fresh
+echo "🚀 Building and starting containers..."
 docker compose up --build -d
+
+echo ""
+echo "✅ Setup complete. You can now access the app at: http://localhost:5000"
+
