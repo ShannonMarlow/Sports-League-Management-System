@@ -28,7 +28,9 @@ docker compose down -v
 
 # Start everything fresh
 echo "🚀 Building and starting containers..."
-docker compose up --build -d
+docker compose build
+
+docker compose up -d
 
 echo ""
 echo "✅ Setup complete. You can now access the app at: http://localhost:5000"
