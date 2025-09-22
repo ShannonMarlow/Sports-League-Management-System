@@ -262,3 +262,8 @@ def reset_user_password_form(user_id):
 
     return render_template("reset_user_password.html", user_id=user_id, username=user[0])
 
+@admin_bp.route('/archive', methods=['GET', 'POST'])
+@admin_required
+def archive():
+    return render_template('archive.html')
+
